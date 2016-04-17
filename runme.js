@@ -46,7 +46,7 @@ http.createServer(function(req, res) {
     notes += "<p>Generated a new " + fileAutoGeneratePath + " file...</p>";
     //pushToGithub();
     //pushToGithubSync();
-    pushToGithubAsync();
+    //pushToGithubAsync();
     notes += "<p>Pushed updates to Github...</p>";
 
     //html = html + htmlDocs;

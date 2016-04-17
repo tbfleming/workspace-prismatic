@@ -1,5 +1,5 @@
 /* global cpdefine chilipeppr cprequire */
-cprequire_test(["inline:com-chilipeppr-workspace-sample"], function(ws) {
+cprequire_test(["inline:org-jscut-workspace-prismatic"], function(ws) {
 
     console.log("initting workspace");
 
@@ -27,18 +27,18 @@ cprequire_test(["inline:com-chilipeppr-workspace-sample"], function(ws) {
     ws.init();
     
     // Do some niceties for testing like margins on widget and title for browser
-    $('title').html("Sample Workspace");
+    $('title').html("Prismatic Workspace");
     $('body').css('padding', '10px');
 
 } /*end_test*/ );
 
 // This is the main definition of your widget. Give it a unique name.
-cpdefine("inline:com-chilipeppr-workspace-sample", ["chilipeppr_ready"], function() {
+cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function () {
     return {
         /**
          * The ID of the widget. You must define this and make it unique.
          */
-        id: "com-chilipeppr-workspace-sample", // Make the id the same as the cpdefine id
+        id: "org-jscut-workspace-prismatic", // Make the id the same as the cpdefine id
         name: "Workspace / Sample", // The descriptive name of your widget.
         desc: `A ChiliPeppr Workspace sample.`,
         url: "(auto fill by runme.js)", // The final URL of the working widget as a single HTML file with CSS and Javascript inlined. You can let runme.js auto fill this if you are using Cloud9.
@@ -60,15 +60,8 @@ cpdefine("inline:com-chilipeppr-workspace-sample", ["chilipeppr_ready"], functio
          * and inits them.
          */
         init: function() {
-
-            // Most workspaces will instantiate the Serial Port JSON Server widget
-            this.loadSpjsWidget();
-            // Most workspaces will instantiate the Serial Port Console widget
-            this.loadConsoleWidget(function() {
-                setTimeout(function() { $(window).trigger('resize'); }, 100);
-            });
-            
-            this.loadTemplateWidget();
+            this.load3dWidget();
+            this.loadPrismaticWidget();
             
             // Create our workspace upper right corner triangle menu
             this.loadWorkspaceMenu();
@@ -81,7 +74,6 @@ cpdefine("inline:com-chilipeppr-workspace-sample", ["chilipeppr_ready"], functio
             // just set widget min-height in CSS instead
             this.setupResize();
             setTimeout(function() { $(window).trigger('resize'); }, 100);
-
         },
         /**
          * Returns the billboard HTML, CSS, and Javascript for this Workspace. The billboard
@@ -115,90 +107,65 @@ cpdefine("inline:com-chilipeppr-workspace-sample", ["chilipeppr_ready"], functio
         onResize: function() {
             if (this.widgetConsole) this.widgetConsole.resize();
         },
-        /**
-         * Load the Template widget via chilipeppr.load() so folks have a sample
-         * widget they can fork as a starting point for their own.
-         */
-        loadTemplateWidget: function(callback) {
 
-            chilipeppr.load(
-                "#com-chilipeppr-widget-template-instance",
-                "http://raw.githubusercontent.com/chilipeppr/widget-template/master/auto-generated-widget.html",
-                function() {
-                    // Callback after widget loaded into #myDivWidgetTemplate
-                    // Now use require.js to get reference to instantiated widget
-                    cprequire(
-                        ["inline:com-chilipeppr-widget-template"], // the id you gave your widget
-                        function(myObjWidgetTemplate) {
-                            // Callback that is passed reference to the newly loaded widget
-                            console.log("Widget / Template just got loaded.", myObjWidgetTemplate);
-                            myObjWidgetTemplate.init();
-                        }
-                    );
-                }
-            );
+        // Hacked-up from chilipeppr.load
+        loadLocal: function(id, url, callback) {
+            console.log("Attempting to load " + id + " at URL " + url);
+            var panel = new function() {			
+                this.id = "";
+                this.url = "";
+                this.isLoaded = false;
+            }
+            panel.id = id;
+            panel.url = url;
+            chilipeppr.panels.push(panel);
+            $.get(panel.url, function(data) {
+                data = chilipeppr.cleanup(data);
+                $(panel.id).html(data);
+                console.log("Load of " + panel.id + " was local");
+                panel.isLoaded = true;
+                callback.apply();
+            });
         },
-        /**
-         * Load the Serial Port JSON Server widget via chilipeppr.load()
-         */
-        loadSpjsWidget: function(callback) {
 
-            var that = this;
-
-            chilipeppr.load(
-                "#com-chilipeppr-widget-serialport-instance",
-                "http://fiddle.jshell.net/chilipeppr/vetj5fvx/show/light/",
-                function() {
-                    console.log("mycallback got called after loading spjs module");
-                    cprequire(["inline:com-chilipeppr-widget-serialport"], function(spjs) {
-                        //console.log("inside require of " + fm.id);
-                        spjs.setSingleSelectMode();
-                        spjs.init({
-                            isSingleSelectMode: true,
-                            defaultBuffer: "default",
-                            defaultBaud: 115200,
-                            bufferEncouragementMsg: 'For your device please choose the "default" buffer in the pulldown and a 115200 baud rate before connecting.'
-                        });
-                        //spjs.showBody();
-                        //spjs.consoleToggle();
-
-                        that.widgetSpjs - spjs;
-                        
-                        if (callback) callback(spjs);
-
-                    });
-                }
-            );
+        loadPrismaticWidget: function () {
+            function callback() {
+                cprequire(
+                    ["inline:org-jscut-widget-prismatic"],
+                    function(myObjWidgetTemplate) {
+                        console.log("Prismatic Widget just got loaded.", myObjWidgetTemplate);
+                        myObjWidgetTemplate.init();
+                    }
+                );
+            }
+            if (true)
+                chilipeppr.load(
+                    "#org-jscut-widget-prismatic-instance",
+                    "http://raw.githubusercontent.com/tbfleming/widget-prismatic/master/auto-generated-widget.html",
+                    callback);
+            else
+                this.loadLocal(
+                    "#org-jscut-widget-prismatic-instance",
+                    "../widget-prismatic/auto-generated-widget.html",
+                    callback);
         },
-        /**
-         * Load the Console widget via chilipeppr.load()
-         */
-        loadConsoleWidget: function(callback) {
-            var that = this;
+
+        load3dWidget: function (callback) {
             chilipeppr.load(
-                "#com-chilipeppr-widget-spconsole-instance",
-                "http://fiddle.jshell.net/chilipeppr/rczajbx0/show/light/",
-                function() {
-                    // Callback after widget loaded into #com-chilipeppr-widget-spconsole-instance
-                    cprequire(
-                        ["inline:com-chilipeppr-widget-spconsole"], // the id you gave your widget
-                        function(mywidget) {
-                            // Callback that is passed reference to your newly loaded widget
-                            console.log("My Console widget just got loaded.", mywidget);
-                            that.widgetConsole = mywidget;
-                            
-                            // init the serial port console
-                            // 1st param tells the console to use "single port mode" which
-                            // means it will only show data for the green selected serial port
-                            // rather than for multiple serial ports
-                            // 2nd param is a regexp filter where the console will filter out
-                            // annoying messages you don't generally want to see back from your
-                            // device, but that the user can toggle on/off with the funnel icon
-                            that.widgetConsole.init(true, /myfilter/);
-                            if (callback) callback(mywidget);
-                        }
-                    );
-                }
+              "#com-chilipeppr-widget-3dviewer-instance",
+              "http://raw.githubusercontent.com/chilipeppr/widget-3dviewer/master/auto-generated-widget.html",
+              function () {
+                  // Callback after widget loaded into #myDivWidget3dviewer
+                  // Now use require.js to get reference to instantiated widget
+                  cprequire(
+                    ["inline:com-chilipeppr-widget-3dviewer"], // the id you gave your widget
+                    function (myObjWidget3dviewer) {
+                        // Callback that is passed reference to the newly loaded widget
+                        console.log("Widget / 3D GCode Viewer just got loaded.", myObjWidget3dviewer);
+                        myObjWidget3dviewer.init();
+                    }
+                  );
+              }
             );
         },
         /**

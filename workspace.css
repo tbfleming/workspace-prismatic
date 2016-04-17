@@ -70,3 +70,6 @@
     padding: 4px 10px 10px 10px;
     background-color: rgba(255, 255, 255, 0.5);
 }
+#com-chilipeppr-widget-3dviewer-renderArea {
+    z-index: -1;
+}
