@@ -60,9 +60,10 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
          * and inits them.
          */
         init: function() {
+            this.loadDragDropWidget();
             this.load3dWidget();
             this.loadPrismaticWidget();
-            
+
             // Create our workspace upper right corner triangle menu
             this.loadWorkspaceMenu();
             // Add our billboard to the menu (has name, url, picture of workspace)
@@ -128,26 +129,28 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
             });
         },
 
-        loadPrismaticWidget: function () {
-            function callback() {
-                cprequire(
-                    ["inline:org-jscut-widget-prismatic"],
-                    function(myObjWidgetTemplate) {
-                        console.log("Prismatic Widget just got loaded.", myObjWidgetTemplate);
-                        myObjWidgetTemplate.init();
-                    }
-                );
-            }
+        load: function (id, url, localUrl, callback) {
             if (true)
-                chilipeppr.load(
-                    "#org-jscut-widget-prismatic-instance",
-                    "http://raw.githubusercontent.com/tbfleming/widget-prismatic/master/auto-generated-widget.html",
-                    callback);
+                chilipeppr.load(id, url, callback);
             else
-                this.loadLocal(
-                    "#org-jscut-widget-prismatic-instance",
-                    "../widget-prismatic/auto-generated-widget.html",
-                    callback);
+                this.loadLocal(id, localUrl, callback);
+        },
+
+        loadPrismaticWidget: function () {
+            this.load(
+                "#org-jscut-widget-prismatic-instance",
+                "http://raw.githubusercontent.com/tbfleming/widget-prismatic/master/auto-generated-widget.html",
+                "../widget-prismatic/auto-generated-widget.html",
+                function() {
+                    cprequire(
+                        ["inline:org-jscut-widget-prismatic"],
+                        function(myObjWidgetTemplate) {
+                            console.log("Prismatic Widget just got loaded.", myObjWidgetTemplate);
+                            myObjWidgetTemplate.init();
+                        }
+                    );
+                }
+            );
         },
 
         load3dWidget: function (callback) {
@@ -168,6 +171,30 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
               }
             );
         },
+
+        loadDragDropWidget: function () {
+            this.load(
+                "#org-jscut-workspace-gcode-dragdrop",
+                "http://raw.githubusercontent.com/tbfleming/elem-dragdrop/master/auto-generated-widget.html",
+                "../elem-dragdrop/auto-generated-widget.html",
+                function () {
+                    require(["inline:com-chilipeppr-elem-dragdrop"], function (dd) {
+                        console.log("inside require of dragdrop");
+                        dd.init();
+                        dd.bind("#org-jscut-workspace-prismatic-dragdrop-wrapper", null);
+                        var ddoverlay = $('#org-jscut-workspace-dragdrop-overlay');
+                        chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", function () {
+                            ddoverlay.removeClass("hidden");
+                        });
+                        chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", function () {
+                            ddoverlay.addClass("hidden");
+                        });
+                        console.log(dd);
+                    });
+                }
+            );
+        },
+
         /**
          * Load the workspace menu and show the pubsubviewer and fork links using
          * our pubsubviewer widget that makes those links for us.

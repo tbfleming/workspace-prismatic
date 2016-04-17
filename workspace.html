@@ -38,63 +38,68 @@
     <div id="com-chilipeppr-widget-flash-instance"></div>
 
     <div id="org-jscut-workspace-prismatic" class="xhidden">
+        <div id="org-jscut-workspace-prismatic-dragdrop-wrapper" class="dropArea">
+            <div id="org-jscut-workspace-dragdrop-overlay" class="hidden">
+                <div class="well">Drag and Drop STL Files Onto Browser Window</div>
+            </div>
 
-        <div class="container-fluid">
-            <div class="row">
+            <div class="container-fluid">
+                <div class="row">
 
-                <!-- Left Column -->
-                <!-- Change the width by adjusting col-md-4 to be col-md-3 for skinnier, or col-md-5 for wider -->
-                <!-- You must have all columns add up to 12 since we use bootstrap's col-md technique, i.e. col-md-2, col-md-7, col-md-3 adds to 12 -->
-                <div class="col-md-4 col-pad10">
+                    <!-- Left Column -->
+                    <!-- Change the width by adjusting col-md-4 to be col-md-3 for skinnier, or col-md-5 for wider -->
+                    <!-- You must have all columns add up to 12 since we use bootstrap's col-md technique, i.e. col-md-2, col-md-7, col-md-3 adds to 12 -->
+                    <div class="col-md-4 col-pad10">
 
-                    <div class="com-chilipeppr-ws-hdr well">
-                        
-                        Workspace - Prismatic
+                        <div class="com-chilipeppr-ws-hdr well">
 
-                        <div class="com-chilipeppr-ws-menu pull-right">
-                            <div class="btn-group">
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                                    <ul class="dropdown-menu dropdown-menu-ws xdropdown-menu-right" role="menu">
-                                        <li class="com-chilipeppr-ws-menu-billboard" style="width:350px;">
-                                            <!-- Billboard -->
-                                            <div class="com-chilipeppr-ws-billboard">
-                                            </div>
-                                            <!-- End Billboard -->
-                                        </li>
+                            Workspace - Prismatic
 
+                            <div class="com-chilipeppr-ws-menu">
+                                <div class="pull-right">
+                                    <div class="btn-group">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                            <ul class="dropdown-menu dropdown-menu-ws xdropdown-menu-right" role="menu">
+                                                <li class="com-chilipeppr-ws-menu-billboard" style="width:350px;">
+                                                    <!-- Billboard -->
+                                                    <div class="com-chilipeppr-ws-billboard">
+                                                    </div>
+                                                    <!-- End Billboard -->
+                                                </li>
 
-                                    </ul>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <div id="org-jscut-workspace-gcode-dragdrop" style="margin-right:6px;" class=""></div>
+                        </div>
+
+                        <div id="org-jscut-widget-prismatic-instance">
+                            <p class="sample">Prismatic Widget goes here</p>
                         </div>
 
                     </div>
 
-                    <div id="org-jscut-widget-prismatic-instance">
-                        <p class="sample">Prismatic Widget goes here</p>
+                    <!-- Center Column -->
+                    <div class="col-md-5 col-pad10">
+                        <div id="com-chilipeppr-widget-3dviewer-instance">
+                            <p class="sample" style="min-height:200px;">Widget 2 goes here</p>
+                        </div>
                     </div>
 
-                </div>
+                    <!-- Right Column -->
+                    <div class="col-md-3 col-pad10">
 
-                <!-- Center Column -->
-                <div class="col-md-5 col-pad10">
-                    <div id="com-chilipeppr-widget-3dviewer-instance">
-                        <p class="sample" style="min-height:200px;">Widget 2 goes here</p>
-                    </div>
-                </div>
+                        <div id="com-chilipeppr-widget-serialport-instance">
+                            Widget 3 goes here
+                        </div>
 
-                <!-- Right Column -->
-                <div class="col-md-3 col-pad10">
-                    
-                    <div id="com-chilipeppr-widget-serialport-instance">
-                        Widget 3 goes here
+                        <div id="mywidget3-instance">
+                            <p class="sample">Widget 3 goes here</p>
+                        </div>
                     </div>
-                    
-                    <div id="mywidget3-instance">
-                        <p class="sample">Widget 3 goes here</p>
-                    </div>
-
                 </div>
 
             </div>

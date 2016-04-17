@@ -73,3 +73,25 @@
 #com-chilipeppr-widget-3dviewer-renderArea {
     z-index: -1;
 }
+
+.dropArea.hover {
+    background: #dddddd;
+}
+
+#org-jscut-workspace-dragdrop-overlay {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:10;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 20px;
+    padding:100px;
+    border: 3px dashed #3276b1;
+    text-align:center;
+    pointer-events: none;
+}
+#org-jscut-workspace-dragdrop-overlay .well {
+    background-color: rgba(127, 127, 127, 0.5);
+}

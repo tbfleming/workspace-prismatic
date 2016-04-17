@@ -90,6 +90,28 @@
     z-index: -1;
 }
 
+.dropArea.hover {
+    background: #dddddd;
+}
+
+#org-jscut-workspace-dragdrop-overlay {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:10;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 20px;
+    padding:100px;
+    border: 3px dashed #3276b1;
+    text-align:center;
+    pointer-events: none;
+}
+#org-jscut-workspace-dragdrop-overlay .well {
+    background-color: rgba(127, 127, 127, 0.5);
+}
+
     </style>
 
     <script type='text/javascript'>
@@ -156,9 +178,10 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
          * and inits them.
          */
         init: function() {
+            this.loadDragDropWidget();
             this.load3dWidget();
             this.loadPrismaticWidget();
-            
+
             // Create our workspace upper right corner triangle menu
             this.loadWorkspaceMenu();
             // Add our billboard to the menu (has name, url, picture of workspace)
@@ -224,26 +247,28 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
             });
         },
 
-        loadPrismaticWidget: function () {
-            function callback() {
-                cprequire(
-                    ["inline:org-jscut-widget-prismatic"],
-                    function(myObjWidgetTemplate) {
-                        console.log("Prismatic Widget just got loaded.", myObjWidgetTemplate);
-                        myObjWidgetTemplate.init();
-                    }
-                );
-            }
+        load: function (id, url, localUrl, callback) {
             if (true)
-                chilipeppr.load(
-                    "#org-jscut-widget-prismatic-instance",
-                    "http://raw.githubusercontent.com/tbfleming/widget-prismatic/master/auto-generated-widget.html",
-                    callback);
+                chilipeppr.load(id, url, callback);
             else
-                this.loadLocal(
-                    "#org-jscut-widget-prismatic-instance",
-                    "../widget-prismatic/auto-generated-widget.html",
-                    callback);
+                this.loadLocal(id, localUrl, callback);
+        },
+
+        loadPrismaticWidget: function () {
+            this.load(
+                "#org-jscut-widget-prismatic-instance",
+                "http://raw.githubusercontent.com/tbfleming/widget-prismatic/master/auto-generated-widget.html",
+                "../widget-prismatic/auto-generated-widget.html",
+                function() {
+                    cprequire(
+                        ["inline:org-jscut-widget-prismatic"],
+                        function(myObjWidgetTemplate) {
+                            console.log("Prismatic Widget just got loaded.", myObjWidgetTemplate);
+                            myObjWidgetTemplate.init();
+                        }
+                    );
+                }
+            );
         },
 
         load3dWidget: function (callback) {
@@ -264,6 +289,30 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
               }
             );
         },
+
+        loadDragDropWidget: function () {
+            this.load(
+                "#org-jscut-workspace-gcode-dragdrop",
+                "http://raw.githubusercontent.com/tbfleming/elem-dragdrop/master/auto-generated-widget.html",
+                "../elem-dragdrop/auto-generated-widget.html",
+                function () {
+                    require(["inline:com-chilipeppr-elem-dragdrop"], function (dd) {
+                        console.log("inside require of dragdrop");
+                        dd.init();
+                        dd.bind("#org-jscut-workspace-prismatic-dragdrop-wrapper", null);
+                        var ddoverlay = $('#org-jscut-workspace-dragdrop-overlay');
+                        chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragover", function () {
+                            ddoverlay.removeClass("hidden");
+                        });
+                        chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", function () {
+                            ddoverlay.addClass("hidden");
+                        });
+                        console.log(dd);
+                    });
+                }
+            );
+        },
+
         /**
          * Load the workspace menu and show the pubsubviewer and fork links using
          * our pubsubviewer widget that makes those links for us.
@@ -302,63 +351,68 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
     <div id="com-chilipeppr-widget-flash-instance"></div>
 
     <div id="org-jscut-workspace-prismatic" class="xhidden">
+        <div id="org-jscut-workspace-prismatic-dragdrop-wrapper" class="dropArea">
+            <div id="org-jscut-workspace-dragdrop-overlay" class="hidden">
+                <div class="well">Drag and Drop STL Files Onto Browser Window</div>
+            </div>
 
-        <div class="container-fluid">
-            <div class="row">
+            <div class="container-fluid">
+                <div class="row">
 
-                <!-- Left Column -->
-                <!-- Change the width by adjusting col-md-4 to be col-md-3 for skinnier, or col-md-5 for wider -->
-                <!-- You must have all columns add up to 12 since we use bootstrap's col-md technique, i.e. col-md-2, col-md-7, col-md-3 adds to 12 -->
-                <div class="col-md-4 col-pad10">
+                    <!-- Left Column -->
+                    <!-- Change the width by adjusting col-md-4 to be col-md-3 for skinnier, or col-md-5 for wider -->
+                    <!-- You must have all columns add up to 12 since we use bootstrap's col-md technique, i.e. col-md-2, col-md-7, col-md-3 adds to 12 -->
+                    <div class="col-md-4 col-pad10">
 
-                    <div class="com-chilipeppr-ws-hdr well">
-                        
-                        Workspace - Prismatic
+                        <div class="com-chilipeppr-ws-hdr well">
 
-                        <div class="com-chilipeppr-ws-menu pull-right">
-                            <div class="btn-group">
-                                <div class="dropdown">
-                                    <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                                    <ul class="dropdown-menu dropdown-menu-ws xdropdown-menu-right" role="menu">
-                                        <li class="com-chilipeppr-ws-menu-billboard" style="width:350px;">
-                                            <!-- Billboard -->
-                                            <div class="com-chilipeppr-ws-billboard">
-                                            </div>
-                                            <!-- End Billboard -->
-                                        </li>
+                            Workspace - Prismatic
 
+                            <div class="com-chilipeppr-ws-menu">
+                                <div class="pull-right">
+                                    <div class="btn-group">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                            <ul class="dropdown-menu dropdown-menu-ws xdropdown-menu-right" role="menu">
+                                                <li class="com-chilipeppr-ws-menu-billboard" style="width:350px;">
+                                                    <!-- Billboard -->
+                                                    <div class="com-chilipeppr-ws-billboard">
+                                                    </div>
+                                                    <!-- End Billboard -->
+                                                </li>
 
-                                    </ul>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <div id="org-jscut-workspace-gcode-dragdrop" style="margin-right:6px;" class=""></div>
+                        </div>
+
+                        <div id="org-jscut-widget-prismatic-instance">
+                            <p class="sample">Prismatic Widget goes here</p>
                         </div>
 
                     </div>
 
-                    <div id="org-jscut-widget-prismatic-instance">
-                        <p class="sample">Prismatic Widget goes here</p>
+                    <!-- Center Column -->
+                    <div class="col-md-5 col-pad10">
+                        <div id="com-chilipeppr-widget-3dviewer-instance">
+                            <p class="sample" style="min-height:200px;">Widget 2 goes here</p>
+                        </div>
                     </div>
 
-                </div>
+                    <!-- Right Column -->
+                    <div class="col-md-3 col-pad10">
 
-                <!-- Center Column -->
-                <div class="col-md-5 col-pad10">
-                    <div id="com-chilipeppr-widget-3dviewer-instance">
-                        <p class="sample" style="min-height:200px;">Widget 2 goes here</p>
-                    </div>
-                </div>
+                        <div id="com-chilipeppr-widget-serialport-instance">
+                            Widget 3 goes here
+                        </div>
 
-                <!-- Right Column -->
-                <div class="col-md-3 col-pad10">
-                    
-                    <div id="com-chilipeppr-widget-serialport-instance">
-                        Widget 3 goes here
+                        <div id="mywidget3-instance">
+                            <p class="sample">Widget 3 goes here</p>
+                        </div>
                     </div>
-                    
-                    <div id="mywidget3-instance">
-                        <p class="sample">Widget 3 goes here</p>
-                    </div>
-
                 </div>
 
             </div>
