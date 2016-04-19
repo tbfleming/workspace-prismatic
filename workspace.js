@@ -62,6 +62,7 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
         init: function() {
             this.loadDragDropWidget();
             this.load3dWidget();
+            this.loadMeshWidget();
             this.loadPrismaticWidget();
 
             // Create our workspace upper right corner triangle menu
@@ -136,15 +137,32 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
                 this.loadLocal(id, localUrl, callback);
         },
 
+        loadMeshWidget: function () {
+            this.load(
+                "#org-jscut-widget-mesh-instance",
+                "http://raw.githubusercontent.com/tbfleming/widget-mesh/master/auto-generated-widget.html",
+                "../widget-mesh/auto-generated-widget.html",
+                function() {
+                    cprequire(
+                        ["inline:org-jscut-widget-mesh"],
+                        function(myObjWidgetTemplate) {
+                            console.log("Mesh Widget just got loaded.", myObjWidgetTemplate);
+                            myObjWidgetTemplate.init();
+                        }
+                    );
+                }
+            );
+        },
+
         loadPrismaticWidget: function () {
             this.load(
                 "#org-jscut-widget-prismatic-instance",
                 "http://raw.githubusercontent.com/tbfleming/widget-prismatic/master/auto-generated-widget.html",
                 "../widget-prismatic/auto-generated-widget.html",
-                function() {
+                function () {
                     cprequire(
                         ["inline:org-jscut-widget-prismatic"],
-                        function(myObjWidgetTemplate) {
+                        function (myObjWidgetTemplate) {
                             console.log("Prismatic Widget just got loaded.", myObjWidgetTemplate);
                             myObjWidgetTemplate.init();
                         }
