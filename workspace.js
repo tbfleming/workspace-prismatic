@@ -184,6 +184,12 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
                         // Callback that is passed reference to the newly loaded widget
                         console.log("Widget / 3D GCode Viewer just got loaded.", myObjWidget3dviewer);
                         myObjWidget3dviewer.init();
+                        setTimeout(function () {
+                            var element = $('#com-chilipeppr-widget-3dviewer-instance .panel-heading').detach();
+                            $('#com-chilipeppr-widget-3dviewer-instance').addClass("noheight");
+                            $('#com-chilipeppr-widget-3dviewer').addClass("nomargin");
+                            $('#com-chilipeppr-3dviewer-controlpanel').append(element);
+                        }, 10);
                     }
                   );
               }
