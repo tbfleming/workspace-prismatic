@@ -64,6 +64,7 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
             this.load3dWidget();
             this.loadMeshWidget();
             this.loadPrismaticWidget();
+            this.loadCam2DWidget();
 
             // Create our workspace upper right corner triangle menu
             this.loadWorkspaceMenu();
@@ -164,6 +165,23 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
                         ["inline:org-jscut-widget-prismatic"],
                         function (myObjWidgetTemplate) {
                             console.log("Prismatic Widget just got loaded.", myObjWidgetTemplate);
+                            myObjWidgetTemplate.init();
+                        }
+                    );
+                }
+            );
+        },
+
+        loadCam2DWidget: function () {
+            this.load(
+                "#org-jscut-widget-cam2d-instance",
+                "http://raw.githubusercontent.com/tbfleming/widget-cam2d/master/auto-generated-widget.html",
+                "../widget-cam2d/auto-generated-widget.html",
+                function() {
+                    cprequire(
+                        ["inline:org-jscut-widget-cam2d"],
+                        function(myObjWidgetTemplate) {
+                            console.log("CAM2D Widget just got loaded.", myObjWidgetTemplate);
                             myObjWidgetTemplate.init();
                         }
                     );
