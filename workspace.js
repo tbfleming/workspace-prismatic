@@ -231,6 +231,11 @@ cpdefine("inline:org-jscut-workspace-prismatic", ["chilipeppr_ready"], function 
                         chilipeppr.subscribe("/com-chilipeppr-elem-dragdrop/ondragleave", function () {
                             ddoverlay.addClass("hidden");
                         });
+                        $('<li><a href="#">Load Sample STL for Prismatic</a></li>')
+                            .insertBefore('.com-chilipeppr-elem-dragdrop .dropdown-menu .divider:first')
+                            .click(
+                                '//raw.githubusercontent.com/tbfleming/widget-mesh/master/sample.stl',
+                                dd.loadUrlDoNotCreateRecentFileEntry.bind(dd));
                         console.log(dd);
                     });
                 }
